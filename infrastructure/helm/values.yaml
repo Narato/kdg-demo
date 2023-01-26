@@ -1,0 +1,13 @@
+name: kdg-demo
+demo:
+  image: nginx
+  tag: latest
+# session:
+#   image: kdgdemo01.azurecr.io/kdg-demo-frontend
+#   tag: latest
+scaler:
+  image: kdgdemo01.azurecr.io/kdg-demo-scaler
+  tag: ''
+  grpcAddress: session-scaler.kdg-demo
+  grpcPort: 80
+  # httpPort: 8080

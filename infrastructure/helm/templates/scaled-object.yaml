@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .Values.name }}
+spec:
+  scaleTargetRef:
+    name: {{ .Values.name }}
+  pollingInterval: 5
+  cooldownPeriod: 5
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 10
+        scaleUp:
+          stabilizationWindowSeconds: 15
+  triggers:
+    - type: external
+      metadata:
+        scalerAddress: {{ .Values.scaler.grpcAddress }}:{{ .Values.scaler.grpcPort }} # Address of the gRPC Service implementing the Scaler interfaces
+        sessionCount: "1" # Number of sessions required to scale up a single extra replica

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session-scaler
+  labels:
+    app: session-scaler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: session-scaler
+  template:
+    metadata:
+      labels:
+        app: session-scaler
+    spec:
+      containers:
+        - name: session-scaler
+          image: {{ .Values.scaler.image }}:{{ .Values.scaler.tag }}
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:{{ .Values.scaler.grpcPort }}"
+            - name: SESSION_ENDPOINT
+              value: "https://{{ .Values.scaler.endpoint }}"
+          ports:
+            - containerPort: {{ .Values.scaler.grpcPort }}
+              name: grpc
+          resources:
+            requests:
+              cpu: 100m
+              memory: 250Mi
+            limits:
+              cpu: 200m
+              memory: 375Mi
